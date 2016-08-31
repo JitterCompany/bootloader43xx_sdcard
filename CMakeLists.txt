@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.5.0 FATAL_ERROR)
 project(blinky_m4)
-set(EXE_NAME blinky_m4)
 
 #------------------------------------------------------------------------------
 # Required CPM Setup - no need to modify - See: https://github.com/iauns/cpm
@@ -27,8 +26,11 @@ include(${CPM_DIR}/CPM.cmake)
 # Build settings
 #-----------------------------------------------------------------------
 
-set(FLASH_ADDR          0x1A000000)
-set(FLASH_CFG           lpc4337_swd)
+set(EXE_NAME                blinky_m4)
+set(FLASH_ADDR              0x1A000000)
+set(FLASH_CFG               lpc4337_swd)
+set(DEBUG_BREAKPOINT_LIMIT  6)
+set(DEBUG_WATCHPOINT_LIMIT  4)
 
 set(CMAKE_C_COMPILER    arm-none-eabi-gcc)
 set(CMAKE_OBJCOPY       arm-none-eabi-objcopy)
@@ -51,7 +53,9 @@ set(L_FLAGS "-nostdlib -specs=nano.specs -mthumb                \
 add_definitions("${FLAGS_M4} ${C_FLAGS} ${C_FLAGS_WARN}")
 add_definitions(-DCORE_M4)
 
-set(FLASH_FILE      ${PROJECT_BINARY_DIR}/flash.cfg)
+set(ELF_PATH            "${CMAKE_CURRENT_BINARY_DIR}/${EXE_NAME}")
+set(EXE_PATH            "${ELF_PATH}.bin")
+set(FLASH_FILE          ${PROJECT_BINARY_DIR}/flash.cfg)
 
 #------------------------------------------------------------------------------
 # CPM Modules
@@ -67,7 +71,7 @@ CPM_AddModule("lpc_chip_43xx_m4"
 
 CPM_AddModule("openocd_tools"
     GIT_REPOSITORY "https://github.com/JitterCompany/openocd_tools.git"
-    GIT_TAG "1.0")
+    GIT_TAG "1.1")
 
 CPM_Finish()
 
