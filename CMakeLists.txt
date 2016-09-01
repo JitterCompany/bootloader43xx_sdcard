@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.5.0 FATAL_ERROR)
+
+set(CMAKE_TOOLCHAIN_FILE    ${CMAKE_SOURCE_DIR}/toolchain-gcc-arm-embedded.cmake)
+
 project(blinky_m4)
 
 #------------------------------------------------------------------------------
@@ -32,8 +35,6 @@ set(FLASH_CFG               lpc4337_swd)
 set(DEBUG_BREAKPOINT_LIMIT  6)
 set(DEBUG_WATCHPOINT_LIMIT  4)
 
-set(CMAKE_C_COMPILER    arm-none-eabi-gcc)
-set(CMAKE_OBJCOPY       arm-none-eabi-objcopy)
 set(CMAKE_GDB           arm-none-eabi-gdb)
 
 set(OPT 0)
