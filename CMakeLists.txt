@@ -104,7 +104,7 @@ target_link_libraries(${EXE_NAME} ${CPM_LIBRARIES})
 
 add_custom_target(bin
     # empty flash file
-    COMMAND echo -n > "${FLASH_FILE}"
+    COMMAND > "${FLASH_FILE}"
 
     DEPENDS ${EXE_NAME}
     COMMAND ${CMAKE_OBJCOPY} -O binary ${EXE_NAME} ${EXE_NAME}.bin
