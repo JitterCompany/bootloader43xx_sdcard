@@ -39,6 +39,8 @@ set(CMAKE_GDB           arm-none-eabi-gdb)
 
 set(OPT 0)
 
+set(SYSTEM_LIBRARIES    m c gcc)
+
 set(FLAGS_M4 "-mcpu=cortex-m4")
 
 set(C_FLAGS "-O${OPT} -g3 -c -fmessage-length=80 -fno-builtin   \
@@ -47,12 +49,14 @@ set(C_FLAGS "-O${OPT} -g3 -c -fmessage-length=80 -fno-builtin   \
 set(C_FLAGS_WARN "-Wall -Wextra -Wno-unused-parameter           \
     -Wshadow -Wpointer-arith -Winit-self -Wstrict-overflow=5")
 
-set(L_FLAGS "-nostdlib -specs=nano.specs -mthumb                \
--ffunction-sections -fdata-sections")
+set(L_FLAGS "-fmessage-length=80 -nostdlib -specs=nano.specs \
+    -mthumb -Wl,--gc-sections")
 
+set(MCU_PLATFORM    43xx_m4)
 
 add_definitions("${FLAGS_M4} ${C_FLAGS} ${C_FLAGS_WARN}")
 add_definitions(-DCORE_M4)
+
 
 set(ELF_PATH            "${CMAKE_CURRENT_BINARY_DIR}/${EXE_NAME}")
 set(EXE_PATH            "${ELF_PATH}.bin")
@@ -101,6 +105,7 @@ set(CMAKE_SYSTEM_NAME Generic)
 #-----------------------------------------------------------------------
 add_executable(${EXE_NAME} ${SOURCES})
 target_link_libraries(${EXE_NAME} ${CPM_LIBRARIES})
+target_link_libraries(${EXE_NAME} ${SYSTEM_LIBRARIES})
 
 add_custom_target(bin
     # empty flash file
