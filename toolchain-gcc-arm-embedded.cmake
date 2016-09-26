@@ -6,7 +6,7 @@ set(CMAKE_SYSTEM_PROCESSOR  arm)
 
 set(CMAKE_C_COMPILER ${PREFIX}-gcc CACHE INTERNAL "c compiler")
 set(CMAKE_CXX_COMPILER ${PREFIX}-c++ CACHE INTERNAL "cxx compiler")
-set(CMAKE_ASM_COMPILER ${PREFIX}-as CACHE INTERNAL "asm compiler")
+set(CMAKE_ASM_COMPILER ${PREFIX}-gcc CACHE INTERNAL "asm compiler")
 
 set(CMAKE_OBJCOPY ${PREFIX}-objcopy CACHE INTERNAL "objcopy")
 set(CMAKE_OBJDUMP ${PREFIX}-objdump CACHE INTERNAL "objdump")
