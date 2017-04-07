@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5.0 FATAL_ERROR)
 
 set(CMAKE_TOOLCHAIN_FILE    ${CMAKE_SOURCE_DIR}/toolchain-gcc-arm-embedded.cmake)
 
-project(blinky_m4)
+project(bootloader)
 
 #------------------------------------------------------------------------------
 # Required CPM Setup - no need to modify - See: https://github.com/iauns/cpm
@@ -29,7 +29,7 @@ include(${CPM_DIR}/CPM.cmake)
 # Build settings
 #-----------------------------------------------------------------------
 
-set(EXE_NAME                blinky_m4)
+set(EXE_NAME                bootloader)
 set(FLASH_ADDR              0x1A000000)
 set(FLASH_CFG               lpc4337_swd)
 set(DEBUG_BREAKPOINT_LIMIT  6)
@@ -72,6 +72,10 @@ CPM_AddModule("43xx_m4_startup"
 
 CPM_AddModule("lpc_chip_43xx_m4"
     GIT_REPOSITORY "https://github.com/JitterCompany/lpc_chip_43xx_m4.git"
+    GIT_TAG "3.0")
+
+CPM_AddModule("lpc_tools"
+    GIT_REPOSITORY "https://github.com/JitterCompany/lpc_tools"
     GIT_TAG "1.0")
 
 CPM_AddModule("openocd_tools"
@@ -82,7 +86,7 @@ CPM_Finish()
 
 
 get_property(startup_linker GLOBAL PROPERTY startup_linker)
-message(STATUS "blinky_m4: startup_linker: ${startup_linker}")
+message(STATUS "bootloader: startup_linker: ${startup_linker}")
 
 set(LINKER_FILES "-L .. -T ${startup_linker}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${L_FLAGS} \

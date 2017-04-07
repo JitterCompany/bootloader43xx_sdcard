@@ -1,6 +1,10 @@
 #include "board.h"
 #include <chip.h>
 
+// chip library depends on this
+const uint32_t OscRateIn = 12000000;
+const uint32_t ExtRateIn = 12000000;
+
 static const PINMUX_GRP_T pinmuxing[] = {
 
         // Board LEDs 
@@ -29,5 +33,11 @@ void board_setup_pins(void)
 {
     board_setup_muxing();
     board_setup_GPIO();
+}
+
+void board_setup_clock(void)
+{
+    // required for chip library to function properly
+    SystemCoreClockUpdate();
 }
 
