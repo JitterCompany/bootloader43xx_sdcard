@@ -10,17 +10,21 @@
 
 #include <mbedtls/sha256.h>
 
+#include <lpc_tools/boardconfig.h>
+
 unsigned int stack_value = 0xA5A55A5A;
 
 #define BLINK_SLOW      (1500000)
 #define BLINK_FAST      (500000)
 
 static void blink(int count, int duration) {
+
+    const GPIO *led = board_get_GPIO(GPIO_ID_LED_BLUE);
     for(int i=0;i<count;i++) {
         for(volatile int n=0;n<duration;n++){} 
-        Chip_GPIO_SetPinState(LPC_GPIO_PORT, 0, 13, true);
+        Chip_GPIO_SetPinState(LPC_GPIO_PORT, led->port, led->pin, true);
         for(volatile int n=0;n<duration;n++){} 
-        Chip_GPIO_SetPinState(LPC_GPIO_PORT, 0, 13, false);
+        Chip_GPIO_SetPinState(LPC_GPIO_PORT, led->port, led->pin, false);
     }
 }
 
@@ -62,10 +66,9 @@ static bool flash_demo(void)
 }
 
 int main(void) {
-    board_setup_pins();
-    Chip_GPIO_SetPinState(LPC_GPIO_PORT, 0, 2, true);
-
-    board_setup_clock();
+    board_setup();
+    const GPIO *led = board_get_GPIO(GPIO_ID_LED_RED);
+    Chip_GPIO_SetPinState(LPC_GPIO_PORT, led->port, led->pin, true);
 
     fpuInit();
     

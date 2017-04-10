@@ -80,7 +80,7 @@ CPM_AddModule("c_utils"
 
 CPM_AddModule("lpc_tools"
     GIT_REPOSITORY "https://github.com/JitterCompany/lpc_tools"
-    GIT_TAG "1.0")
+    GIT_TAG "2.0")
 
 CPM_AddModule("openocd_tools"
     GIT_REPOSITORY "https://github.com/JitterCompany/openocd_tools.git"
