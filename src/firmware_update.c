@@ -77,22 +77,22 @@ static bool update(const char *filename, const size_t file_size,
     return success;
 }
 
-bool firmware_update(const char *filename,
+enum FirmwareResult firmware_update(const char *filename,
         const uint32_t flash_addr_begin, const size_t flash_max_size)
 {
     const size_t file_size = sdcard_file_size(filename);
     if(!file_size || file_size > flash_max_size) {
-        return false;
+        return FIRMWARE_RESULT_ERROR;
     }
     
-    bool success = true;
-    
-    if(update_required(filename, file_size, flash_addr_begin)) {
-        if(!update(filename, file_size, flash_addr_begin, flash_max_size)) {
-            success = false;
-        }
-    } 
+    if(!update_required(filename, file_size, flash_addr_begin)) {
+        return FIRMWARE_RESULT_NOTHING_TO_DO;
+    }
 
-    return success;
+    if(update(filename, file_size, flash_addr_begin, flash_max_size)) {
+        return FIRMWARE_RESULT_UPDATED;
+    }
+    
+    return FIRMWARE_RESULT_ERROR;
 }
 

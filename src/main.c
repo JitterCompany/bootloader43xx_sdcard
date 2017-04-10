@@ -33,71 +33,54 @@ static void blink(int count, int duration) {
     }
 }
 
-static bool flash_demo(void)
+static struct {
+    unsigned int error_count;
+    bool updated; 
+} update_state;
+
+static void check_fw(const char *filename,
+        const uint32_t flash_addr_begin, const size_t flash_max_size)
 {
-    uint8_t src_data[512];
-    for(size_t i=0;i<sizeof(src_data);i++) {
-        src_data[i] = i;
-    }
-    
-    uint8_t expected_hash[32];
-    mbedtls_sha256(src_data, sizeof(src_data), expected_hash, 0);
-
-
-    // erase complete M4 program section
-    if(!flash_erase(FLASH_PROGRAM_M4_ADDR, FLASH_PROGRAM_M4_END_ADDR)) {
-        return false;
-    }
-    
-    // write some dummy data to M4 program section
-    if(!flash_append((uint8_t*)src_data, sizeof(src_data))) {
-        return false;
-    }
-    
-    uint8_t hash[32];
-    hash_flash(FLASH_PROGRAM_M4_ADDR, sizeof(src_data),
-            hash, sizeof(hash));
-     
-    return hash_equal(expected_hash, sizeof(expected_hash),
-            hash, sizeof(hash));
-}
-
-
-static bool sdcard_demo(void)
-{
-    return firmware_update("fw_m0.bin",
+    enum FirmwareResult result = firmware_update("fw_m0.bin",
             FLASH_PROGRAM_M0_ADDR, FLASH_PROGRAM_M0_SIZE);
+
+    if(result == FIRMWARE_RESULT_ERROR) {
+        update_state.error_count+= 1;
+
+    } else if(result == FIRMWARE_RESULT_UPDATED) {
+        update_state.updated = true;
+    }
 }
+
 
 int main(void) {
     board_setup();
 
     const GPIO *led = board_get_GPIO(GPIO_ID_LED_RED);
     GPIO_HAL_set(led, HIGH);
-    
+
     delay_init();
     sdcard_init(board_get_GPIO(GPIO_ID_SDCARD_POWER_ENABLE));
     sdcard_enable();
 
     fpuInit();
-    
-    blink(5, BLINK_SLOW);
 
-    if(!sdcard_demo()) {
-        while(1) {
-            blink(1, BLINK_FAST);
-        }
+    blink(2, BLINK_SLOW);
+
+    memset(&update_state, 0, sizeof(update_state));
+
+    check_fw("fw_m4.bin", FLASH_PROGRAM_M4_ADDR, FLASH_PROGRAM_M4_SIZE);
+    check_fw("fw_m0.bin", FLASH_PROGRAM_M0_ADDR, FLASH_PROGRAM_M0_SIZE);
+
+    blink(10*update_state.error_count, BLINK_FAST);
+
+    if(update_state.updated) {
+        blink(10, BLINK_SLOW);
+        // TODO reset mcu
     }
-/*
-    if(!flash_demo()) {
-        while(1) {
-            blink(1, BLINK_FAST);
-        }
-    }
-*/
-    while(1) {
-        blink(1, BLINK_SLOW);
-    }
+    
+    GPIO_HAL_set(led, LOW);
+    // TODO boot main firmware
     return 0;
 }
 
