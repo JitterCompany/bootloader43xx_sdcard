@@ -59,6 +59,10 @@ set(C_FLAGS_PLATFORM    "-DMCU_PLATFORM_${MCU_PLATFORM}")
 add_definitions("${FLAGS_M4} ${C_FLAGS} ${C_FLAGS_WARN} ${C_FLAGS_PLATFORM}")
 add_definitions(-DCORE_M4)
 
+# fatfs_lib overrides
+add_definitions(-D_FS_READONLY=1)
+add_definitions(-D_FS_MINIMIZE=3)
+
 
 set(ELF_PATH            "${CMAKE_CURRENT_BINARY_DIR}/${EXE_NAME}")
 set(EXE_PATH            "${ELF_PATH}.bin")
@@ -83,6 +87,14 @@ CPM_AddModule("c_utils"
 CPM_AddModule("lpc_tools"
     GIT_REPOSITORY "https://github.com/JitterCompany/lpc_tools"
     GIT_TAG "2.0")
+
+CPM_AddModule("fatfs_lib"
+    GIT_REPOSITORY "https://github.com/JitterCompany/fatfs_lib"
+    GIT_TAG "1.1")
+
+CPM_AddModule("mcu_timing"
+    GIT_REPOSITORY "https://github.com/JitterCompany/mcu_timing"
+    GIT_TAG "1.1")
 
 CPM_AddModule("openocd_tools"
     GIT_REPOSITORY "https://github.com/JitterCompany/openocd_tools.git"

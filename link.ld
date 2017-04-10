@@ -5,12 +5,12 @@ MEMORY
    * Note: the bootloader end address should be aligned to a sector boundary!
    * See User manual 6.5, table 31 for the sector start addresses.
    */
-  Flash_M4 (rx) : 	ORIGIN = 0x1a000000, LENGTH = 0x4000
+  Flash_M4 (rx) : 	ORIGIN = 0x1a000000, LENGTH = 0x6000
 
   /* flash space for the user program (M0 and M4 core)
    * */
-  flash_program_M0 (rx) : 	ORIGIN = 0x1b004000, LENGTH = 0x7C000
-  flash_program_M4 (rx) : 	ORIGIN = 0x1a004000, LENGTH = 0x7C000
+  flash_program_M0 (rx) : 	ORIGIN = 0x1b000000 + LENGTH(Flash_M4), LENGTH = 0x80000 - LENGTH(Flash_M4)
+  flash_program_M4 (rx) : 	ORIGIN = 0x1a000000 + LENGTH(Flash_M4), LENGTH = 0x80000 - LENGTH(Flash_M4)
 
   /* RAM used by the bootloader */
   RAM_M4 (rwx) : 	ORIGIN = 0x10080000, LENGTH = 0x9FE0

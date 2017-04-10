@@ -9,6 +9,8 @@ const uint32_t ExtRateIn = 12000000;
 
 
 static const NVICConfig NVIC_config[] = {
+    {TIMER3_IRQn,       0},     // delay timer: high priority to ensure
+                                // timestamps are correct in any context 
     {SDIO_IRQn,         3},     // SD card: probably not timing sensitive
 };
 
@@ -48,7 +50,7 @@ static const GPIOConfig pin_config[] = {
     {{3, 13}, GPIO_CFG_DIR_OUTPUT_LOW},     // GPIO_ID_EXT_LED_GREEN
     {{3, 12}, GPIO_CFG_DIR_OUTPUT_LOW},     // GPIO_ID_EXT_LED_RED
 
-    {{1, 8 }, GPIO_CFG_DIR_OUTPUT_HIGH},    // GPIO_ID_SDCARD_POWER_ENABLE
+    {{1, 8 }, GPIO_CFG_DIR_OUTPUT_LOW},     // GPIO_ID_SDCARD_POWER_ENABLE
 };
 
 // pin config struct should match GPIO_ID enum
