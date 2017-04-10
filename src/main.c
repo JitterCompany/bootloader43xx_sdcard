@@ -8,6 +8,8 @@
 #include "flash.h"
 #include "flash_addresses.h"
 
+#include <mbedtls/sha256.h>
+
 unsigned int stack_value = 0xA5A55A5A;
 
 #define BLINK_SLOW      (1500000)
@@ -23,14 +25,17 @@ static void blink(int count, int duration) {
 }
 
 
-#define SECTOR_ADDR         (0x1A070000)
-
 static bool flash_demo(void)
 {
     uint8_t src_data[512];
     for(size_t i=0;i<sizeof(src_data);i++) {
         src_data[i] = i;
     }
+    
+    uint8_t expected_hash[32];
+    mbedtls_sha256(src_data, sizeof(src_data),
+            expected_hash, 0);
+
 
     // erase complete M4 program section
     if(!flash_erase(FLASH_PROGRAM_M4_ADDR, FLASH_PROGRAM_M4_END_ADDR)) {
@@ -41,10 +46,19 @@ static bool flash_demo(void)
     if(!flash_append((uint8_t*)src_data, sizeof(src_data))) {
         return false;
     }
-
-    // TODO verify flash is correct.
-    // Maybe use internal signature generation (run from RAM!) or sha256?
-    return true;
+    
+    uint8_t hash[32];
+    mbedtls_sha256((uint8_t*)FLASH_PROGRAM_M4_ADDR, sizeof(src_data),
+            hash, 0);
+     
+    // Constant-time compare.
+    // Usefull in case this hash is used in a security context.
+    uint8_t diff = 0;
+    for(size_t i=0;i<sizeof(hash);i++) {
+        diff|= (expected_hash[i] ^ hash[i]);
+    }
+    
+    return (diff == 0);
 }
 
 int main(void) {

@@ -86,6 +86,14 @@ CPM_AddModule("openocd_tools"
     GIT_REPOSITORY "https://github.com/JitterCompany/openocd_tools.git"
     GIT_TAG "1.1")
 
+# mbed_tls: use our own src/mbedtls_cfg.h instead of the default
+set(TLS_CFG_INCLUDE "<${CMAKE_CURRENT_SOURCE_DIR}/src/mbedtls_cfg.h>")
+add_definitions("-DMBEDTLS_CONFIG_FILE=${TLS_CFG_INCLUDE}")
+
+CPM_AddModule("cpm_mbedtls"
+    GIT_REPOSITORY "https://github.com/JitterCompany/cpm_mbedtls.git"
+GIT_TAG "1.0")
+
 CPM_Finish()
 
 
