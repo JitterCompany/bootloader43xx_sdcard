@@ -42,13 +42,13 @@ static const PINMUX_GRP_T pinmuxing[] = {
 };
 
 static const GPIOConfig pin_config[] = {
-    {{0, 3 }, GPIO_DIR_OUTPUT_LOW},     // GPIO_ID_LED_BLUE
-    {{0, 12}, GPIO_DIR_OUTPUT_LOW},     // GPIO_ID_LED_RED
+    {{0, 3 }, GPIO_CFG_DIR_OUTPUT_LOW},     // GPIO_ID_LED_BLUE
+    {{0, 12}, GPIO_CFG_DIR_OUTPUT_LOW},     // GPIO_ID_LED_RED
 
-    {{3, 13}, GPIO_DIR_OUTPUT_LOW},     // GPIO_ID_EXT_LED_GREEN
-    {{3, 12}, GPIO_DIR_OUTPUT_LOW},     // GPIO_ID_EXT_LED_RED
+    {{3, 13}, GPIO_CFG_DIR_OUTPUT_LOW},     // GPIO_ID_EXT_LED_GREEN
+    {{3, 12}, GPIO_CFG_DIR_OUTPUT_LOW},     // GPIO_ID_EXT_LED_RED
 
-    {{1, 8 }, GPIO_DIR_OUTPUT_HIGH},    // GPIO_ID_SDCARD_POWER_ENABLE
+    {{1, 8 }, GPIO_CFG_DIR_OUTPUT_HIGH},    // GPIO_ID_SDCARD_POWER_ENABLE
 };
 
 // pin config struct should match GPIO_ID enum

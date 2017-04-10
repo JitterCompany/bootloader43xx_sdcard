@@ -1,4 +1,3 @@
-#include <chip.h>
 #include "board.h"
 
 #include <stddef.h>
@@ -11,6 +10,7 @@
 #include <mbedtls/sha256.h>
 
 #include <lpc_tools/boardconfig.h>
+#include <lpc_tools/GPIO_HAL.h>
 
 unsigned int stack_value = 0xA5A55A5A;
 
@@ -22,9 +22,9 @@ static void blink(int count, int duration) {
     const GPIO *led = board_get_GPIO(GPIO_ID_LED_BLUE);
     for(int i=0;i<count;i++) {
         for(volatile int n=0;n<duration;n++){} 
-        Chip_GPIO_SetPinState(LPC_GPIO_PORT, led->port, led->pin, true);
+        GPIO_HAL_set(led, HIGH);
         for(volatile int n=0;n<duration;n++){} 
-        Chip_GPIO_SetPinState(LPC_GPIO_PORT, led->port, led->pin, false);
+        GPIO_HAL_set(led, LOW);
     }
 }
 
@@ -68,7 +68,7 @@ static bool flash_demo(void)
 int main(void) {
     board_setup();
     const GPIO *led = board_get_GPIO(GPIO_ID_LED_RED);
-    Chip_GPIO_SetPinState(LPC_GPIO_PORT, led->port, led->pin, true);
+    GPIO_HAL_set(led, HIGH);
 
     fpuInit();
     

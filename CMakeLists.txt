@@ -54,7 +54,9 @@ set(L_FLAGS "-fmessage-length=80 -nostdlib -specs=nano.specs \
 
 set(MCU_PLATFORM    43xx_m4)
 
-add_definitions("${FLAGS_M4} ${C_FLAGS} ${C_FLAGS_WARN}")
+set(C_FLAGS_PLATFORM    "-DMCU_PLATFORM_${MCU_PLATFORM}")
+
+add_definitions("${FLAGS_M4} ${C_FLAGS} ${C_FLAGS_WARN} ${C_FLAGS_PLATFORM}")
 add_definitions(-DCORE_M4)
 
 
