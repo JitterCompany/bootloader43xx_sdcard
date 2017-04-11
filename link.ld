@@ -9,7 +9,7 @@ MEMORY
 
   /* flash space for the user program (M0 and M4 core)
    * */
-  flash_program_M0 (rx) : 	ORIGIN = 0x1b000000 + LENGTH(Flash_M4), LENGTH = 0x80000 - LENGTH(Flash_M4)
+  flash_program_M0 (rx) : 	ORIGIN = 0x1b000000, LENGTH = 0x80000
   flash_program_M4 (rx) : 	ORIGIN = 0x1a000000 + LENGTH(Flash_M4), LENGTH = 0x80000 - LENGTH(Flash_M4)
 
   /* RAM used by the bootloader */

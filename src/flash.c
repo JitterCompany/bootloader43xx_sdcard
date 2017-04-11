@@ -48,7 +48,6 @@ static bool IAP_prepare_and_write(uint32_t start_sector,
         uint8_t *new_data, size_t sizeof_new_data);
 
 static uint8_t flash_bank_from_addr(uint32_t address);
-static uint32_t flash_start_from_addr(uint32_t address);
 static bool address_overlaps_bootloader(uint32_t addr);
 static bool sector_lookup(const uint32_t address, uint32_t *result_sector_id);
 static bool valid_flash_range(uint32_t start_addr, uint32_t end_addr);
@@ -193,7 +192,7 @@ static uint8_t flash_bank_from_addr(uint32_t address) {
  * Find the start address of a given flash address.
  * Returns 0 if the given address is not a valid flash address
  */
-static uint32_t flash_start_from_addr(uint32_t address) {
+uint32_t flash_start_from_addr(uint32_t address) {
     switch((address >> 24)) {
         case 0x1A:
             return 0x1A000000;

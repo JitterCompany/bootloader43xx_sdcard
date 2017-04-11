@@ -5,7 +5,7 @@
 
 // chip library depends on this
 const uint32_t OscRateIn = 12000000;
-const uint32_t ExtRateIn = 12000000;
+const uint32_t ExtRateIn = 0;
 
 
 static const NVICConfig NVIC_config[] = {

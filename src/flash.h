@@ -38,5 +38,11 @@ bool flash_erase(uint32_t start_addr, uint32_t end_addr);
  */
 bool flash_append(uint8_t *new_data, size_t sizeof_new_data);
 
+/**
+ * Utility function to find the start address of the flash bank
+ * of the given flash address.
+ * Returns 0 if the given address is not a valid flash address.
+ */
+uint32_t flash_start_from_addr(uint32_t address);
 #endif
 
