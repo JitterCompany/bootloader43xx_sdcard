@@ -15,6 +15,8 @@
 #include "sdcard.h"
 #include "firmware_update.h"
 
+#include "bootloader.h"
+
 unsigned int stack_value = 0xA5A55A5A;
 
 
@@ -78,6 +80,11 @@ static void run_user_program(void)
     user_program();
 }
 
+void fatal_error(void) {
+    while(1) {
+        blink(10, BLINK_FAST);
+    }
+}
 
 int main(void) {
     board_setup();
@@ -90,6 +97,12 @@ int main(void) {
     sdcard_enable();
 
     fpuInit();
+
+    // Assert the bootloader metadata is sane.
+    // If this ever fails, it is a firmware/linker file bug.
+    if(BOOTLOADER_PTR->valid != BOOTLOADER_VALID) {
+        fatal_error();
+    }
 
     // slow blink on startup
     blink(2, BLINK_SLOW);

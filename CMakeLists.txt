@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5.0 FATAL_ERROR)
 
-set(CMAKE_TOOLCHAIN_FILE    ${CMAKE_SOURCE_DIR}/toolchain-gcc-arm-embedded.cmake)
+set(CMAKE_TOOLCHAIN_FILE    ${CMAKE_SOURCE_DIR}/cmake/toolchain-gcc-arm-embedded.cmake)
 
 project(bootloader)
 
@@ -74,7 +74,7 @@ set(FLASH_FILE          ${PROJECT_BINARY_DIR}/flash.cfg)
 
 CPM_AddModule("43xx_m4_startup"
     GIT_REPOSITORY "https://github.com/JitterCompany/43xx_m4_startup.git"
-    GIT_TAG "1.0")
+    GIT_TAG "1.1")
 
 CPM_AddModule("lpc_chip_43xx_m4"
     GIT_REPOSITORY "https://github.com/JitterCompany/lpc_chip_43xx_m4.git"
@@ -133,9 +133,22 @@ set(CMAKE_SYSTEM_NAME Generic)
 #-----------------------------------------------------------------------
 # Setup executable
 #-----------------------------------------------------------------------
-add_executable(${EXE_NAME} ${SOURCES})
+
+set(FW_VERSION_FILE "${CMAKE_SOURCE_DIR}/src/generated/bootloader_version.h")
+
+add_custom_command(OUTPUT ${FW_VERSION_FILE}
+    DEPENDS version
+    )
+
+add_custom_target(version
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/cmake/version.cmake "${FW_VERSION_FILE}" "${BUILD_OPTS}" 
+    )
+
+
+add_executable(${EXE_NAME} ${SOURCES} ${FW_VERSION_FILE})
 target_link_libraries(${EXE_NAME} ${CPM_LIBRARIES})
 target_link_libraries(${EXE_NAME} ${SYSTEM_LIBRARIES})
+
 
 add_custom_target(bin
     # empty flash file
