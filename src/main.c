@@ -52,7 +52,7 @@ static void check_fw(const char *filename,
     if(result == FIRMWARE_RESULT_ERROR) {
         g_update_state.error_count+= 1;
 
-    } else if(result == FIRMWARE_RESULT_UPDATED) {
+    } else if(result == FIRMWARE_RESULT_OK) {
         g_update_state.updated = true;
     }
 }

@@ -3,30 +3,31 @@
 #include "flash.h"
 #include <string.h>
 
-static bool update_required(const char *filename, const size_t file_size,
+static enum FirmwareResult update_required(const char *filename,
+        const size_t file_size,
         const uint32_t flash_addr_begin)
 {
     // failed to hash file: cannot update
     uint8_t hash_of_file[32];
     if(!hash_file(filename, file_size,
                 hash_of_file, sizeof(hash_of_file))) {
-        return false;
+        return FIRMWARE_RESULT_ERROR;
     }
 
     uint8_t hash_of_flash[32];
     // failed to hash flash: cannot update
     if(!hash_flash(flash_addr_begin, file_size,
                 hash_of_flash, sizeof(hash_of_flash))) {
-        return false;
+        return FIRMWARE_RESULT_ERROR;
     }
 
     // file and flash match: no update required
     if(hash_equal(hash_of_file, sizeof(hash_of_file),
             hash_of_flash, sizeof(hash_of_flash))) {
-        return false;
+        return FIRMWARE_RESULT_NOTHING_TO_DO;
     }
 
-    return true;
+    return FIRMWARE_RESULT_OK;
 }
 
 static bool update(const char *filename, const size_t file_size,
@@ -85,12 +86,14 @@ enum FirmwareResult firmware_update(const char *filename,
         return FIRMWARE_RESULT_ERROR;
     }
     
-    if(!update_required(filename, file_size, flash_addr_begin)) {
-        return FIRMWARE_RESULT_NOTHING_TO_DO;
+    enum FirmwareResult should_update = update_required(filename,
+            file_size, flash_addr_begin);
+    if(should_update != FIRMWARE_RESULT_OK) {
+        return should_update;
     }
 
     if(update(filename, file_size, flash_addr_begin, flash_max_size)) {
-        return FIRMWARE_RESULT_UPDATED;
+        return FIRMWARE_RESULT_OK;
     }
     
     return FIRMWARE_RESULT_ERROR;
