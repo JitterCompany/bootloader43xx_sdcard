@@ -41,7 +41,7 @@ static void blink(int count, int duration_us) {
 static struct {
     unsigned int error_count;
     bool updated; 
-} update_state;
+} g_update_state;
 
 static void check_fw(const char *filename,
         const uint32_t flash_addr_begin, const size_t flash_max_size)
@@ -50,10 +50,10 @@ static void check_fw(const char *filename,
             flash_addr_begin, flash_max_size);
 
     if(result == FIRMWARE_RESULT_ERROR) {
-        update_state.error_count+= 1;
+        g_update_state.error_count+= 1;
 
     } else if(result == FIRMWARE_RESULT_UPDATED) {
-        update_state.updated = true;
+        g_update_state.updated = true;
     }
 }
 
@@ -108,15 +108,15 @@ int main(void) {
     // slow blink on startup
     blink(2, BLINK_SLOW);
 
-    memset(&update_state, 0, sizeof(update_state));
+    memset(&g_update_state, 0, sizeof(g_update_state));
 
     check_fw("fw_m4.bin", FLASH_PROGRAM_M4_ADDR, FLASH_PROGRAM_M4_SIZE);
     check_fw("fw_m0.bin", FLASH_PROGRAM_M0_ADDR, FLASH_PROGRAM_M0_SIZE);
 
     // fast blinking if firmware could not be updated
-    blink(10*update_state.error_count, BLINK_FAST);
+    blink(10*g_update_state.error_count, BLINK_FAST);
 
-    if(update_state.updated) {
+    if(g_update_state.updated) {
         // slow blink after an update
         blink(5, BLINK_SLOW);
 
