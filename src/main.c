@@ -88,6 +88,7 @@ void fatal_error(void) {
 
 int main(void) {
     board_setup();
+    board_setup_NVIC();
 
     GPIO_HAL_set(board_get_GPIO(GPIO_ID_LED_RED),       HIGH);
     GPIO_HAL_set(board_get_GPIO(GPIO_ID_EXT_LED_RED),   HIGH);
