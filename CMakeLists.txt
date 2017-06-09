@@ -151,7 +151,7 @@ target_link_libraries(${EXE_NAME} ${CPM_LIBRARIES})
 target_link_libraries(${EXE_NAME} ${SYSTEM_LIBRARIES})
 
 
-add_custom_target(bin
+add_custom_target(bin ALL
     # empty flash file
     COMMAND > "${FLASH_FILE}"
 
@@ -159,6 +159,7 @@ add_custom_target(bin
     COMMAND ${CMAKE_OBJCOPY} -O binary ${EXE_NAME} ${EXE_NAME}.bin
 
     # append flash file
-    COMMAND echo "${PROJECT_BINARY_DIR}/${EXE_NAME}.bin ${FLASH_ADDR} ${FLASH_CFG}" >> "${PROJECT_BINARY_DIR}/flash.cfg"
+    COMMAND echo "${PROJECT_BINARY_DIR}/${EXE_NAME}.bin ${FLASH_ADDR} ${FLASH_CFG} ${MCU_PLATFORM}" >> "${PROJECT_BINARY_DIR}/flash.cfg"
     )
 
+add_dependencies(flash bin)
