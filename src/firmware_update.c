@@ -1,12 +1,71 @@
+#include <string.h>
+#include <c_utils/static_assert.h>
 #include "firmware_update.h"
 #include "hash.h"
 #include "flash.h"
-#include <string.h>
+#include "sdcard.h"
+
+const uint8_t expected_header[] = "3853:sha256";
+typedef struct {
+    uint8_t header[11];
+    uint8_t reserved[21];
+    uint8_t sha256[32]; 
+} FirmwareFooter;
+
+STATIC_ASSERT(sizeof(FirmwareFooter) == 64);
+
+static bool validate_file(const char *filename, size_t file_size)
+{
+    if(file_size < sizeof(FirmwareFooter)) {
+        return false;
+    }
+    const size_t data_size = file_size - sizeof(FirmwareFooter);
+
+    FIL file;
+    if(!sdcard_open_file(&file, filename)) {
+        return false;
+    }
+
+    // Read 64-byte footer from file
+    FirmwareFooter footer;
+    size_t result_size;
+    const bool read_ok = sdcard_read_file_offset(&file, data_size,
+            &footer, sizeof(footer), &result_size);
+    sdcard_close_file(&file);
+    if((!read_ok) || (result_size != sizeof(footer))) {
+        return false;
+    }
+
+    // Assert that a proper footer is found
+    for(size_t i=0;i<sizeof(footer.header);i++) {
+        if(footer.header[i] != expected_header[i]) {
+            return false;
+        }
+    }
+
+    // Hash the data part of the file and check it against the footer
+    uint8_t hash[32];
+    if(!hash_file(filename, data_size, hash, sizeof(hash))) {
+        return false;
+    }
+    if(!hash_equal(footer.sha256, sizeof(footer.sha256),
+                hash, sizeof(hash))) {
+        return false;
+    }
+
+    // File contains a proper and the footer hash matches the content
+    return true;
+}
 
 static enum FirmwareResult update_required(const char *filename,
         const size_t file_size,
         const uint32_t flash_addr_begin)
 {
+    // failed to validate file: cannot update
+    if(!validate_file(filename, file_size)) {
+        return FIRMWARE_RESULT_ERROR;
+    }
+
     // failed to hash file: cannot update
     uint8_t hash_of_file[32];
     if(!hash_file(filename, file_size,

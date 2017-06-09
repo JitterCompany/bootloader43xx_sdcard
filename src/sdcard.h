@@ -26,7 +26,7 @@ bool sdcard_read_file_binary(sdcard_file *fp,
         uint8_t *result, size_t sizeof_result,
         size_t *bytes_returned);
 bool sdcard_read_file_offset(sdcard_file *fp, size_t offset,
-        uint8_t *result, size_t sizeof_result,
+        void *result, size_t sizeof_result,
         size_t *bytes_returned);
 
 

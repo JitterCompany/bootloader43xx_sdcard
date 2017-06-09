@@ -1,5 +1,6 @@
 #include "hash.h"
 #include <mbedtls/sha256.h>
+#include <c_utils/max.h>
 
 bool hash_equal(const uint8_t *hash_a, const size_t sizeof_hash_a,
         const uint8_t *hash_b, const size_t sizeof_hash_b)
@@ -51,16 +52,18 @@ bool hash_file(const char *filename, const size_t file_size,
     mbedtls_sha256_init(&sha256);
     mbedtls_sha256_starts(&sha256, 0);
 
-    while(offset < file_size) {
 
+    while(offset < file_size) {
+        
+        const size_t bytes_to_read = min(sizeof(buffer), file_size - offset);
         size_t bytes_read = 0;
         if(!sdcard_read_file_binary(&file,
-                    buffer, sizeof(buffer),
+                    buffer, bytes_to_read,
                     &bytes_read)) {
             success = false;
             break;
         }
-        if(!bytes_read || (bytes_read > sizeof(buffer))) {
+        if(!bytes_read || (bytes_read > bytes_to_read)) {
             success = false;
             break;
         }

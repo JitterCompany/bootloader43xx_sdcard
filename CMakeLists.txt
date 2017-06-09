@@ -61,7 +61,7 @@ add_definitions(-DCORE_M4)
 
 # fatfs_lib overrides
 add_definitions(-D_FS_READONLY=1)
-add_definitions(-D_FS_MINIMIZE=3)
+add_definitions(-D_FS_MINIMIZE=2)
 add_definitions(-DFF_FS_NORTC=1)
 
 
