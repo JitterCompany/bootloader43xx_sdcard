@@ -1,4 +1,4 @@
-#include "board.h"
+#include "board_config.h"
 
 #include <stddef.h>
 #include <stdint.h>

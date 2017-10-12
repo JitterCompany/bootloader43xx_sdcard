@@ -25,6 +25,34 @@ endif()
 include(${CPM_DIR}/CPM.cmake)
 
 
+#------------------------------------------------------------------------------
+# Detect Board Specific Settings
+#------------------------------------------------------------------------------
+
+# defaults
+set(BOARD               "unknown")
+set(OPTIMIZE            0)
+
+# find board config
+include(${CMAKE_SOURCE_DIR}/board_config.cmake)
+
+add_definitions(-DOPTIMIZE=${OPTIMIZE})
+add_definitions(-BOARD=${BOARD})
+
+# build options string: only append non-default options
+
+
+string(REPLACE "BOARD_" "" BOARD_ID "${BOARD}")
+string(REPLACE "-" "_" BOARD_STR "${BOARD_ID}")
+list(APPEND BUILD_OPTS "-${BOARD_STR}")
+
+if(NOT("${OPTIMIZE}" STREQUAL "2"))
+    list(APPEND BUILD_OPTS "-O${OPTIMIZE}")
+endif()
+
+string(REPLACE ";" "" BUILD_OPTS "${BUILD_OPTS}")
+
+
 #-----------------------------------------------------------------------
 # Build settings
 #-----------------------------------------------------------------------
@@ -87,7 +115,7 @@ CPM_AddModule("c_utils"
 
 CPM_AddModule("lpc_tools"
     GIT_REPOSITORY "https://github.com/JitterCompany/lpc_tools"
-    GIT_TAG "2.3")
+    GIT_TAG "2.4")
 
 CPM_AddModule("fatfs_lib"
     GIT_REPOSITORY "https://github.com/JitterCompany/fatfs_lib"
@@ -95,7 +123,7 @@ CPM_AddModule("fatfs_lib"
 
 CPM_AddModule("mcu_timing"
     GIT_REPOSITORY "https://github.com/JitterCompany/mcu_timing"
-    GIT_TAG "1.4.0")
+    GIT_TAG "1.4.1")
 
 CPM_AddModule("openocd_tools"
     GIT_REPOSITORY "https://github.com/JitterCompany/openocd_tools.git"
@@ -124,9 +152,15 @@ ${LINKER_FILES} ${FLAGS_M4}")
 # Setup source
 #-----------------------------------------------------------------------
 
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/src/board_config/${BOARD_ID}/")
+    message(FATAL_ERROR "Board '${BOARD_ID}' not supported!\nPlease check board_config.cmake!")
+endif()
+
+include_directories("${CMAKE_SOURCE_DIR}/src/")
 
 file(GLOB SOURCES 
 "src/*.c"
+"src/board_config/${BOARD_ID}/*.c"
 )
 
 set(CMAKE_SYSTEM_NAME Generic)

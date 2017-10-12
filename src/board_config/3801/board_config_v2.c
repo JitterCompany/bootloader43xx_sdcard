@@ -1,12 +1,7 @@
-#include "board.h"
+#include "board_config.h"
 #include <chip.h>
 #include <lpc_tools/boardconfig.h>
 #include <c_utils/static_assert.h>
-
-// chip library depends on this
-const uint32_t OscRateIn = 12000000;
-const uint32_t ExtRateIn = 0;
-
 
 static const NVICConfig NVIC_config[] = {
     {TIMER3_IRQn,       0},     // delay timer: high priority to ensure
@@ -17,12 +12,17 @@ static const NVICConfig NVIC_config[] = {
 static const PINMUX_GRP_T pinmuxing[] = {
 
         // Board LEDs 
-        {1, 16, (SCU_MODE_FUNC0)}, //blue
-        {1, 17, (SCU_MODE_FUNC0)}, //red
+        {1, 16, (SCU_MODE_FUNC0)},      // LED_BLUE
+        {1, 17, (SCU_MODE_FUNC0)},      // LED_RED
 
         // UI LEDs
         {7, 4, (SCU_MODE_FUNC0)},       // EXT_LED_RED
         {7, 5, (SCU_MODE_FUNC0)},       // EXT_LED_GREEN
+
+        // UI Button
+        {7, 3, (SCU_MODE_FUNC0 
+                | SCU_MODE_INBUFF_EN
+                | SCU_MODE_PULLUP)},    // EXT_BUTTON
 
         // SD Card
         {1, 5, SCU_MODE_FUNC0},         // SDCARD_POWER_ENABLE
@@ -49,6 +49,7 @@ static const GPIOConfig pin_config[] = {
 
     {{3, 13}, GPIO_CFG_DIR_OUTPUT_LOW},     // GPIO_ID_EXT_LED_GREEN
     {{3, 12}, GPIO_CFG_DIR_OUTPUT_LOW},     // GPIO_ID_EXT_LED_RED
+    {{3, 11}, GPIO_CFG_DIR_INPUT},          // GPIO_ID_EXT_BUTTON
 
     {{1, 8 }, GPIO_CFG_DIR_OUTPUT_LOW},     // GPIO_ID_SDCARD_POWER_ENABLE
 };
@@ -69,7 +70,7 @@ static const BoardConfig config = {
 };
 
 
-void board_setup(void)
+void board_config_v2_setup(void)
 {
     board_set_config(&config);
 

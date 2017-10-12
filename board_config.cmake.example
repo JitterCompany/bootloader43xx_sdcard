@@ -1,0 +1,18 @@
+# === Local board config === #
+# This is a separate config file to avoid committing
+# changes in the main Makefile.
+# See cmake/common_settings.cmake for the defaults.
+
+
+
+
+# Select target board. Any board defined in src/board_config/<board-id>/
+# can be selected here by defining BOARD as BOARD_<board-id>
+# Note: NO TRAILING WHITESPACE ALLOWED!
+
+set(BOARD   BOARD_0000)
+
+
+# Set optimize level
+set(OPTIMIZE        0)
+
