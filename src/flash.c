@@ -8,12 +8,6 @@
 #include "flash_addresses.h"
 
 
-// start address of each flash bank
-static const uint32_t flash_banks[] = {
-    0x1A000000,
-    0x1B000000
-};
-
 // sizes of the sectors: not all sectors are the same size!
 static const size_t sector_sizes[] = {
 0x2000,
