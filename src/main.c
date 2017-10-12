@@ -23,18 +23,32 @@ unsigned int stack_value = 0xA5A55A5A;
 #define BLINK_SLOW      (400000)
 #define BLINK_FAST      (100000)
 
+static void try_set(const GPIO *pin, enum GPIO_state state)
+{
+    if(!pin) {
+        return;
+    }
+    GPIO_HAL_set(pin, state);
+}
+
 static void blink(int count, int duration_us) {
 
-    const GPIO *led_board = board_get_GPIO(GPIO_ID_LED_BLUE);
-    const GPIO *led_ext = board_get_GPIO(GPIO_ID_EXT_LED_GREEN);
+    const GPIO *led_board = NULL;
+    if(board_has_GPIO(GPIO_ID_LED_BLUE)) {
+        led_board = board_get_GPIO(GPIO_ID_LED_BLUE);
+    }
+    const GPIO *led_ext = NULL;
+    if(board_has_GPIO(GPIO_ID_EXT_LED_GREEN)) {
+        led_ext = board_get_GPIO(GPIO_ID_EXT_LED_GREEN);
+    }
 
     for(int i=0;i<count;i++) {
         delay_us(duration_us);
-        GPIO_HAL_set(led_board,     HIGH);
-        GPIO_HAL_set(led_ext,       HIGH);
+        try_set(led_board,     HIGH);
+        try_set(led_ext,       HIGH);
         delay_us(duration_us);
-        GPIO_HAL_set(led_board,     LOW);
-        GPIO_HAL_set(led_ext,       LOW);
+        try_set(led_board,     LOW);
+        try_set(led_ext,       LOW);
     }
 }
 
@@ -90,11 +104,20 @@ int main(void) {
     board_setup();
     board_setup_NVIC();
 
-    GPIO_HAL_set(board_get_GPIO(GPIO_ID_LED_RED),       HIGH);
-    GPIO_HAL_set(board_get_GPIO(GPIO_ID_EXT_LED_RED),   HIGH);
+    if(board_has_GPIO(GPIO_ID_LED_RED)) { 
+        GPIO_HAL_set(board_get_GPIO(GPIO_ID_LED_RED),       HIGH);
+    }
+    if(board_has_GPIO(GPIO_ID_EXT_LED_RED)) { 
+        GPIO_HAL_set(board_get_GPIO(GPIO_ID_EXT_LED_RED),   HIGH);
+    }
 
     delay_init();
     bool skip_update = false;
+    
+    // skip update if the EXT_BUTTON GPIO exists and is pulled low
+    if(board_has_GPIO(GPIO_ID_EXT_BUTTON)) {
+        skip_update = !GPIO_HAL_get(board_get_GPIO(GPIO_ID_EXT_BUTTON));
+    }
 
     sdcard_init(board_get_GPIO(GPIO_ID_SDCARD_POWER_ENABLE));
     if(!sdcard_enable()) {
@@ -133,8 +156,13 @@ int main(void) {
         Chip_RGU_TriggerReset(RGU_CORE_RST);
     }
     
-    GPIO_HAL_set(board_get_GPIO(GPIO_ID_LED_RED),       LOW);
-    GPIO_HAL_set(board_get_GPIO(GPIO_ID_EXT_LED_RED),   LOW);
+
+    if(board_has_GPIO(GPIO_ID_LED_RED)) {
+        GPIO_HAL_set(board_get_GPIO(GPIO_ID_LED_RED),       LOW);
+    }
+    if(board_has_GPIO(GPIO_ID_EXT_LED_RED)) {
+        GPIO_HAL_set(board_get_GPIO(GPIO_ID_EXT_LED_RED),   LOW);
+    }
     
     // NOTE: disable all interrupts that this bootloader has enabled
     // to avoid unexpected calling of user IRQHandlers
