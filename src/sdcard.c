@@ -27,10 +27,17 @@ static void sdmmc_waitms(uint32_t time)
  */
 static uint32_t sdmmc_irq_driven_wait(void)
 {
+    // 5 seconds timeout should be plenty
+    delay_timeout_t timeout;
+    delay_timeout_set(&timeout, 5000000);
     uint32_t status;
 
-    /* Wait for event, would be nice to have a timeout, but keep it  simple */
-    while (sdio_wait_exit == 0) {}
+    // Wait for event, fail on timeout
+    while (sdio_wait_exit == 0) {
+        if(delay_timeout_done(&timeout)) {
+            return -1;
+        }
+    }
 
     /* Get status and clear interrupts */
     status = Chip_SDIF_GetIntStatus(LPC_SDMMC);
@@ -167,7 +174,7 @@ bool sdcard_enable(void)
     GPIO_HAL_set(g_sdcard_power_en_pin, HIGH);
 
     // mount filesystem
-    FRESULT rc = f_mount(&Fatfs, "", 0);
+    FRESULT rc = f_mount(&Fatfs, "", 1);
     return !rc;
 }
 

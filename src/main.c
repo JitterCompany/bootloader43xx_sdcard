@@ -94,8 +94,12 @@ int main(void) {
     GPIO_HAL_set(board_get_GPIO(GPIO_ID_EXT_LED_RED),   HIGH);
 
     delay_init();
+    bool skip_update = false;
+
     sdcard_init(board_get_GPIO(GPIO_ID_SDCARD_POWER_ENABLE));
-    sdcard_enable();
+    if(!sdcard_enable()) {
+        skip_update = true;
+    }
 
     fpuInit();
 
@@ -110,8 +114,12 @@ int main(void) {
 
     memset(&g_update_state, 0, sizeof(g_update_state));
 
-    check_fw("fw_m4.bin", FLASH_PROGRAM_M4_ADDR, FLASH_PROGRAM_M4_SIZE);
-    check_fw("fw_m0.bin", FLASH_PROGRAM_M0_ADDR, FLASH_PROGRAM_M0_SIZE);
+    if(skip_update) {
+        blink(3, BLINK_FAST);
+    } else {
+        check_fw("fw_m4.bin", FLASH_PROGRAM_M4_ADDR, FLASH_PROGRAM_M4_SIZE);
+        check_fw("fw_m0.bin", FLASH_PROGRAM_M0_ADDR, FLASH_PROGRAM_M0_SIZE);
+    }
 
     // fast blinking if firmware could not be updated
     blink(10*g_update_state.error_count, BLINK_FAST);
