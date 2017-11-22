@@ -28,6 +28,7 @@ void board_setup(void)
             break;
 
         case 5:
+        case 6:
             board_config_v5_setup();
             break;
 
