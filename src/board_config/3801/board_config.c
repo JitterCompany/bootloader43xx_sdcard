@@ -13,6 +13,7 @@ const uint32_t ExtRateIn = 0;
 
 void board_config_v2_setup(void);
 void board_config_v5_setup(void);
+void board_config_v6_setup(void);
 
 static int version_hardware_get(void);
 
@@ -28,8 +29,10 @@ void board_setup(void)
             break;
 
         case 5:
-        case 6:
             board_config_v5_setup();
+            break;
+        case 6:
+            board_config_v6_setup();
             break;
 
         default:
