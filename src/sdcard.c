@@ -171,7 +171,9 @@ bool sdcard_read_file_offset(sdcard_file *fp, size_t offset,
 bool sdcard_enable(void)
 {
     // enable power
-    GPIO_HAL_set(g_sdcard_power_en_pin, HIGH);
+    if(g_sdcard_power_en_pin) {
+        GPIO_HAL_set(g_sdcard_power_en_pin, HIGH);
+    }
 
     // mount filesystem
     FRESULT rc = f_mount(&Fatfs, "", 1);
@@ -184,7 +186,9 @@ bool sdcard_disable(void)
     FRESULT rc = f_mount(NULL, "", 0);
 
     // disable power
-    GPIO_HAL_set(g_sdcard_power_en_pin, LOW);
+    if(g_sdcard_power_en_pin) {
+        GPIO_HAL_set(g_sdcard_power_en_pin, LOW);
+    }
 
     return !rc;
 }

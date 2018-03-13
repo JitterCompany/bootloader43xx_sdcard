@@ -118,8 +118,12 @@ int main(void) {
     if(board_has_GPIO(GPIO_ID_EXT_BUTTON)) {
         skip_update = !GPIO_HAL_get(board_get_GPIO(GPIO_ID_EXT_BUTTON));
     }
-
-    sdcard_init(board_get_GPIO(GPIO_ID_SDCARD_POWER_ENABLE));
+    
+    const GPIO *sdcard_pwr_en_pin = NULL;
+    if(board_has_GPIO(GPIO_ID_SDCARD_POWER_ENABLE)) {
+        sdcard_pwr_en_pin = board_get_GPIO(GPIO_ID_SDCARD_POWER_ENABLE);
+    }
+    sdcard_init(sdcard_pwr_en_pin);
     if(!sdcard_enable()) {
         skip_update = true;
     }
