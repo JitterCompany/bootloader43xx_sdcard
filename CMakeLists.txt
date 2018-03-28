@@ -63,7 +63,7 @@ set(FLASH_CFG               lpc4337_swd)
 set(DEBUG_BREAKPOINT_LIMIT  6)
 set(DEBUG_WATCHPOINT_LIMIT  4)
 
-set(CMAKE_GDB           arm-none-eabi-gdb)
+set(CMAKE_GDB           arm-none-eabi-gdb-py)
 
 set(OPT 0)
 
@@ -107,15 +107,15 @@ CPM_AddModule("43xx_m4_startup"
 
 CPM_AddModule("lpc_chip_43xx_m4"
     GIT_REPOSITORY "https://github.com/JitterCompany/lpc_chip_43xx_m4.git"
-    GIT_TAG "3.0.1")
+    GIT_TAG "3.1")
 
 CPM_AddModule("c_utils"
     GIT_REPOSITORY "https://github.com/JitterCompany/c_utils"
-    GIT_TAG "1.4.1")
+    GIT_TAG "1.4.5")
 
 CPM_AddModule("lpc_tools"
     GIT_REPOSITORY "https://github.com/JitterCompany/lpc_tools"
-    GIT_TAG "2.4")
+    GIT_TAG "2.5")
 
 CPM_AddModule("fatfs_lib"
     GIT_REPOSITORY "https://github.com/JitterCompany/fatfs_lib"
@@ -123,11 +123,11 @@ CPM_AddModule("fatfs_lib"
 
 CPM_AddModule("mcu_timing"
     GIT_REPOSITORY "https://github.com/JitterCompany/mcu_timing"
-    GIT_TAG "1.4.1")
+    GIT_TAG "1.5.2")
 
 CPM_AddModule("openocd_tools"
     GIT_REPOSITORY "https://github.com/JitterCompany/openocd_tools.git"
-    GIT_TAG "1.3")
+    GIT_TAG "1.4")
 
 # mbed_tls: use our own src/mbedtls_cfg.h instead of the default
 set(TLS_CFG_INCLUDE "<${CMAKE_CURRENT_SOURCE_DIR}/src/mbedtls_cfg.h>")
@@ -135,7 +135,7 @@ add_definitions("-DMBEDTLS_CONFIG_FILE=${TLS_CFG_INCLUDE}")
 
 CPM_AddModule("cpm_mbedtls"
     GIT_REPOSITORY "https://github.com/JitterCompany/cpm_mbedtls.git"
-GIT_TAG "1.0")
+GIT_TAG "1.1")
 
 CPM_Finish()
 
