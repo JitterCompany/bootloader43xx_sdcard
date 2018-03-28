@@ -123,7 +123,7 @@ CPM_AddModule("fatfs_lib"
 
 CPM_AddModule("mcu_timing"
     GIT_REPOSITORY "https://github.com/JitterCompany/mcu_timing"
-    GIT_TAG "1.5.2")
+    GIT_TAG "1.5.3")
 
 CPM_AddModule("openocd_tools"
     GIT_REPOSITORY "https://github.com/JitterCompany/openocd_tools.git"

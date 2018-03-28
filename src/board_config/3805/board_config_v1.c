@@ -4,7 +4,7 @@
 #include <c_utils/static_assert.h>
 
 static const NVICConfig NVIC_config[] = {
-    {TIMER3_IRQn,       0},     // delay timer: high priority to ensure
+    {TIMER2_IRQn,       0},     // delay timer: high priority to ensure
                                 // timestamps are correct in any context 
     {SDIO_IRQn,         3},     // SD card: probably not timing sensitive
 };
