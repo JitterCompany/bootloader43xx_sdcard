@@ -5,8 +5,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "sdcard.h"
-
 /**
  * Test if two hashes are equal.
  *

@@ -12,7 +12,7 @@
 #include "flash_addresses.h"
 
 #include "string.h"
-#include "sdcard.h"
+#include <mcu_sdcard/sdcard.h>
 #include "firmware_update.h"
 
 #include "bootloader.h"
@@ -123,10 +123,13 @@ int main(void) {
     if(board_has_GPIO(GPIO_ID_SDCARD_POWER_ENABLE)) {
         sdcard_pwr_en_pin = board_get_GPIO(GPIO_ID_SDCARD_POWER_ENABLE);
     }
-    sdcard_init(sdcard_pwr_en_pin);
-    if(!sdcard_enable()) {
+    sdcard_init(sdcard_pwr_en_pin, NULL, NULL);
+    int retries = 0;
+    if(SDCARD_OK != sdcard_enable(&retries)) {
         skip_update = true;
     }
+    blink(retries, BLINK_FAST);
+    delay_us(500*1000);
 
     fpuInit();
 

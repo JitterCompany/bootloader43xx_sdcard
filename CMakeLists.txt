@@ -105,17 +105,13 @@ CPM_AddModule("43xx_m4_startup"
     GIT_REPOSITORY "https://github.com/JitterCompany/43xx_m4_startup.git"
     GIT_TAG "1.1")
 
-CPM_AddModule("lpc_chip_43xx_m4"
-    GIT_REPOSITORY "https://github.com/JitterCompany/lpc_chip_43xx_m4.git"
-    GIT_TAG "3.1")
-
 CPM_AddModule("c_utils"
     GIT_REPOSITORY "https://github.com/JitterCompany/c_utils"
     GIT_TAG "1.4.5")
 
 CPM_AddModule("lpc_tools"
     GIT_REPOSITORY "https://github.com/JitterCompany/lpc_tools"
-    GIT_TAG "2.5")
+    GIT_TAG "2.5.1")
 
 CPM_AddModule("fatfs_lib"
     GIT_REPOSITORY "https://github.com/JitterCompany/fatfs_lib"
@@ -123,11 +119,20 @@ CPM_AddModule("fatfs_lib"
 
 CPM_AddModule("mcu_timing"
     GIT_REPOSITORY "https://github.com/JitterCompany/mcu_timing"
-    GIT_TAG "1.5.3")
+    GIT_TAG "1.5.4")
+
+CPM_AddModule("mcu_sdcard"
+    GIT_REPOSITORY "https://github.com/JitterCompany/mcu_sdcard"
+    GIT_TAG "0.3")
 
 CPM_AddModule("openocd_tools"
     GIT_REPOSITORY "https://github.com/JitterCompany/openocd_tools.git"
     GIT_TAG "1.4")
+
+CPM_AddModule("lpc_chip_43xx_m4"
+    GIT_REPOSITORY "https://github.com/JitterCompany/lpc_chip_43xx_m4.git"
+    GIT_TAG "3.1.2")
+
 
 # mbed_tls: use our own src/mbedtls_cfg.h instead of the default
 set(TLS_CFG_INCLUDE "<${CMAKE_CURRENT_SOURCE_DIR}/src/mbedtls_cfg.h>")

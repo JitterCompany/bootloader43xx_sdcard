@@ -3,7 +3,7 @@
 #include "firmware_update.h"
 #include "hash.h"
 #include "flash.h"
-#include "sdcard.h"
+#include <mcu_sdcard/sdcard.h>
 
 const uint8_t expected_header[] = "3853:sha256";
 typedef struct {
@@ -30,7 +30,7 @@ static bool validate_file(const char *filename, size_t file_size)
     FirmwareFooter footer;
     size_t result_size;
     const bool read_ok = sdcard_read_file_offset(&file, data_size,
-            &footer, sizeof(footer), &result_size);
+            (uint8_t*)&footer, sizeof(footer), &result_size);
     sdcard_close_file(&file);
     if((!read_ok) || (result_size != sizeof(footer))) {
         return false;
@@ -53,7 +53,7 @@ static bool validate_file(const char *filename, size_t file_size)
         return false;
     }
 
-    // File contains a proper and the footer hash matches the content
+    // File contains a proper footer and the footer hash matches the content
     return true;
 }
 

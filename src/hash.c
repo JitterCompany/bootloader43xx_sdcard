@@ -1,6 +1,7 @@
 #include "hash.h"
 #include <mbedtls/sha256.h>
 #include <c_utils/max.h>
+#include <mcu_sdcard/sdcard.h>
 
 bool hash_equal(const uint8_t *hash_a, const size_t sizeof_hash_a,
         const uint8_t *hash_b, const size_t sizeof_hash_b)
