@@ -128,8 +128,10 @@ int main(void) {
     if(SDCARD_OK != sdcard_enable(&retries)) {
         skip_update = true;
     }
-    blink(retries, BLINK_FAST);
-    delay_us(500*1000);
+    if(retries) {
+        blink(retries, BLINK_FAST);
+        delay_us(500*1000);
+    }
 
     fpuInit();
 
