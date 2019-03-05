@@ -129,9 +129,9 @@ CPM_AddModule("mcu_timing"
     GIT_REPOSITORY "https://github.com/JitterCompany/mcu_timing"
     GIT_TAG "1.5.5")
 
-CPM_AddModule("openocd_tools"
-    GIT_REPOSITORY "https://github.com/JitterCompany/openocd_tools.git"
-    GIT_TAG "1.4")
+CPM_AddModule("mcu_debug"
+    GIT_REPOSITORY "https://github.com/JitterCompany/mcu_debug.git"
+    GIT_TAG "2.1")
 
 
 # mbed_tls: use our own src/mbedtls_cfg.h instead of the default

@@ -16,3 +16,8 @@ set(BOARD   BOARD_0000)
 # Set optimize level
 set(OPTIMIZE        0)
 
+# Select blackmagic probe
+set(BLACKMAGIC_DEV /dev/cu.usbmodemC1CC90EE1)
+
+set(POWER_TARGET "no")
+
